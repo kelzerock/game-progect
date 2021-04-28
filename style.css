@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  position: relative;
+}
+.canvas-under {
+  background: #222222;
+}
+.canvas-over {
+  background: #22222200;
+  position: absolute;
+  left: 0;
+  top: 0;
+
+}
