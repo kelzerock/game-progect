@@ -1,4 +1,11 @@
 (() => {
+  cnv1()
+  cnv2()
+  window.addEventListener('resize',function refresh(){
+    cnv1();
+    cnv2();
+  },false)
+  function cnv1(){
   const cnv = document.querySelector(`.canvas-under`);
   const ctx = cnv.getContext(`2d`);
   document.querySelector('body').style.overflow = 'hidden'
@@ -7,6 +14,7 @@
     cnv.height = innerHeight;
   }
   init();
+  document.querySelector('.start h1').style.margin = `${innerHeight/2.5}px auto 5px auto`
 
   const numberOfRings     = 3;
   const ringRadiusOffset  = 7;
@@ -68,83 +76,82 @@
   loop();
 
   window.addEventListener(`resize`, init);
-
-})();
-
-(() => {
- 
-  const cnv = document.querySelector(`.canvas-over`);
-  const ctx = cnv.getContext(`2d`);
-  document.querySelector('body').style.overflow = 'hidden'
-
-  function init() {
-    cnv.width  = innerWidth;
-    cnv.height = innerHeight;
   }
-  init();
+  function cnv2(){
 
-  const numberOfRings     = 3;
-  const ringRadiusOffset  = innerWidth / 43;
-  const ringRadius        = innerWidth / 3;
-  const waveOffset        = 120;
-  const colors            = [`#77111140`, `#bb111140`, `#ff111140`];
-  let startAngle          = 180;
-
-  function updateRings() {
-    for (let i = 0; i < numberOfRings; i++) {
-      let radius = i * ringRadiusOffset + ringRadius;
-      let offsetAngle = i * waveOffset * Math.PI / 180;
-      drawRing(radius, colors[i], offsetAngle);
+    const cnv = document.querySelector(`.canvas-over`);
+    const ctx = cnv.getContext(`2d`);
+    document.querySelector('body').style.overflow = 'hidden'
+  
+    function init() {
+      cnv.width  = innerWidth;
+      cnv.height = innerHeight;
     }
-
-    startAngle >= 360? startAngle = 0 : startAngle++;
-  }
-
-  let centerX = cnv.width  / 2;
-  let centerY = cnv.height / 2;
-
-  const maxWavesAmplitude = 17;
-  const numberOfWaves     = 7;
-
-  function drawRing(radius, color, offsetAngle) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = innerWidth/50;
-
-    ctx.beginPath();
-    
-    for (let j = -180; j < 180; j++) {
-      let currentAngle  = (j + startAngle) * Math.PI / 180;
-      let displacement  = 0;
-      let now = Math.abs(j);
-
-      if (now > 70) {
-        displacement = (now - 70) / 70;
+    init();
+  
+    const numberOfRings     = 3;
+    const ringRadiusOffset  = innerWidth / 43;
+    const ringRadius        = innerWidth / 3;
+    const waveOffset        = 120;
+    const colors            = [`#77111140`, `#bb111140`, `#ff111140`];
+    let startAngle          = 180;
+  
+    function updateRings() {
+      for (let i = 0; i < numberOfRings; i++) {
+        let radius = i * ringRadiusOffset + ringRadius;
+        let offsetAngle = i * waveOffset * Math.PI / 180;
+        drawRing(radius, colors[i], offsetAngle);
       }
-
-      if (displacement >= 1) {
-        displacement = 1;
-      }
-
-      let waveAmplitude = radius + displacement * Math.sin((currentAngle + offsetAngle) * numberOfWaves) * maxWavesAmplitude;
-      let x = centerX + Math.cos(currentAngle) * waveAmplitude;
-      let y = centerY + Math.sin(currentAngle) * waveAmplitude;
-      j > -180? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-
+  
+      startAngle >= 360? startAngle = 0 : startAngle++;
     }
-    ctx.closePath();
-    ctx.stroke();
+  
+    let centerX = cnv.width  / 2;
+    let centerY = cnv.height / 2;
+  
+    const maxWavesAmplitude = 17;
+    const numberOfWaves     = 7;
+  
+    function drawRing(radius, color, offsetAngle) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth   = innerWidth/50;
+  
+      ctx.beginPath();
+      
+      for (let j = -180; j < 180; j++) {
+        let currentAngle  = (j + startAngle) * Math.PI / 180;
+        let displacement  = 0;
+        let now = Math.abs(j);
+  
+        if (now > 70) {
+          displacement = (now - 70) / 70;
+        }
+  
+        if (displacement >= 1) {
+          displacement = 1;
+        }
+  
+        let waveAmplitude = radius + displacement * Math.sin((currentAngle + offsetAngle) * numberOfWaves) * maxWavesAmplitude;
+        let x = centerX + Math.cos(currentAngle) * waveAmplitude;
+        let y = centerY + Math.sin(currentAngle) * waveAmplitude;
+        j > -180? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+  
+    function loop() {
+      cnv.width |= 0;
+      updateRings();
+      requestAnimationFrame(loop);
+    }
+    loop();
+  
+    window.addEventListener(`resize`, init);
   }
-
-  function loop() {
-    cnv.width |= 0;
-    updateRings();
-    requestAnimationFrame(loop);
-  }
-  loop();
-
-  window.addEventListener(`resize`, init);
-
-})();
+  })();
+  
 
 
   document.addEventListener('mousemove', function(){
@@ -158,129 +165,170 @@
     }, false);
 
   document.querySelector('.start button').addEventListener('click', function(){
+      
     let audio = new Audio()
     audio.src = 'sound/button-sound.mp3'
     audio.play();
-    setTimeout(() => {
-      let audio = new Audio()
-      audio.src = 'sound/close-screen.mp3'
-      audio.play();
-    }, 1000);
+
     document.querySelector('.start h1').style.cssText = 'opacity: 0'
     document.querySelector('.start button').style.cssText = 'opacity: 0'
     
     let startDiv = document.querySelector('.start')
     startDiv.classList.remove('start'); 
-    startDiv.classList.add('start-end'); 
+    startDiv.classList.add('start-end');
+    let heightDiv = innerHeight/2 ;
+    document.querySelector('.start-end').style.marginTop = `${heightDiv}px`
     setTimeout(() => {
-      startDiv.style.cssText =  'width: 0; margin-left: 50%'
-    }, 1000);
+      let div = document.querySelector('.start-end');
+      div.style.width = "0"
+      div.style.marginLeft = "50%"
+      div.style.marginTop =  heightDiv + 'px';
+    },1000);
     setTimeout(() => {
       startDiv.style.display = 'none'
     }, 2000);
 
+ 
+    let field = document.createElement('div');
+    document.body.appendChild(field);
+    field.classList.add('field')
 
+    for(let i = 1;i<=100; i++){
+      let excel = document.createElement('div');
+      field.appendChild(excel)
+      excel.classList.add('excel')
+    }
+    let excel = document.querySelectorAll('.excel')
+    let x = 1,
+        y = 10;
 
-
-    const canvas = document.getElementById("game");
-    canvas.style.cssText = "z-index: 3";
-    const ctx = canvas.getContext("2d");
-    
-    const ground = new Image();
-    ground.src = "images/ground.png";
-    
-    const foodImg = new Image();
-    foodImg.src = "images/food.png";
-    
-    let box = 32;
-    
-    let score = 0;
-    
-    let food = {
-      x: Math.floor((Math.random() * 17 + 1)) * box,
-      y: Math.floor((Math.random() * 15 + 3)) * box,
-    };
-    
-    let snake = [];
-    snake[0] = {
-      x: 9 * box,
-      y: 10 * box
-    };
-    
-    document.addEventListener("keydown", direction);
-    
-    let dir;
-    
-    function direction(event) {
-      if(event.keyCode == 37 && dir != "right")
-        dir = "left";
-      else if(event.keyCode == 38 && dir != "down")
-        dir = "up";
-      else if(event.keyCode == 39 && dir != "left")
-        dir = "right";
-      else if(event.keyCode == 40 && dir != "up")
-        dir = "down";
+      for(let i = 0; i<excel.length; i++){
+        if(x>10){
+          x =1;
+          y--;
+        }
+        excel[i].setAttribute('posX', x);
+        excel[i].setAttribute('posY', y);
+        x++;
+      }
+    function startSnake(){
+      let posX = Math.round(Math.random()*(10-3)+3)
+      let posY = Math.round(Math.random()*(10-1)+1)
+      return [posX, posY]
     }
     
-    function eatTail(head, arr) {
-      for(let i = 0; i < arr.length; i++) {
-        if(head.x == arr[i].x && head.y == arr[i].y)
-          clearInterval(game);
+    let coordinate = startSnake();
+    let snakeBody = [document.querySelector('[posX = "' + coordinate[0] + '"][posY ="'+ coordinate[1]+'"]'),document.querySelector('[posX = "' + (coordinate[0]-1) + '"][posY ="'+ coordinate[1]+'"]'),
+    document.querySelector('[posX = "' + (coordinate[0]-2) + '"][posY ="'+ coordinate[1]+'"]'),];
+    for (let i = 0; i <snakeBody.length; i++){
+      snakeBody[i].classList.add('snakeBody')
+    }
+    snakeBody[0].classList.add('snakeHead');
+
+    let evil 
+
+    function creatEvil(){
+
+      function startEvil(){
+        let posX = Math.round(Math.random()*(10-1)+1)
+        let posY = Math.round(Math.random()*(10-1)+1)
+        return [posX, posY]
+      }
+
+      let evilCoordinate = startEvil();
+      evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
+      evil.classList.add('evil');
+      while(evil.classList.contains('snakeBody')){
+        let evilCoordinate = startEvil();
+        evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
+        evil.classList.add('evil');
       }
     }
-    
-    function drawGame() {
-      ctx.drawImage(ground, 0, 0);
-    
-      ctx.drawImage(foodImg, food.x, food.y);
-    
-      for(let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i == 0 ? "green" : "red";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+    creatEvil()
+    let direction = "right";
+    let steps = false;
+
+    function move() {
+      let snakeCoordinate = [snakeBody[0].getAttribute('posX'), snakeBody[0].getAttribute('posY')];
+      snakeBody[0].classList.remove('snakeHead');
+      snakeBody[snakeBody.length-1].classList.remove('snakeBody');
+      snakeBody.pop();
+
+      if(direction == 'right'){
+        if(snakeCoordinate[0]< 10) {
+        snakeBody.unshift(document.querySelector('[posX = "' + (+snakeCoordinate[0]+1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
+          } else {
+        snakeBody.unshift(document.querySelector('[posX = "1"][posY ="'+ snakeCoordinate[1]+'"]'));
+        }
+      } else if (direction == 'left'){
+        if(snakeCoordinate[0]> 1) {
+          snakeBody.unshift(document.querySelector('[posX = "' + (+snakeCoordinate[0]-1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
+        }else {
+          snakeBody.unshift(document.querySelector('[posX = "10"][posY ="'+ snakeCoordinate[1]+'"]'));
+        }
+      } else if (direction == 'up'){
+        if(snakeCoordinate[1]< 10) {
+          snakeBody.unshift(document.querySelector('[posX = "' +snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] +1)+'"]'));
+        }else {
+          snakeBody.unshift(document.querySelector('[posX = "'+ snakeCoordinate[0]+'"][posY ="1"]'));
+        }
+      }else if (direction == 'down'){
+        if(snakeCoordinate[1]> 1) {
+          snakeBody.unshift(document.querySelector('[posX = "' + snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] -1)+'"]'));
+        }else {
+          snakeBody.unshift(document.querySelector('[posX = "'+ snakeCoordinate[0]+'"][posY ="10"]'));
+        }
       }
-    
-      ctx.fillStyle = "white";
-      ctx.font = "50px Arial";
-      ctx.fillText(score, box * 2.5, box * 1.7);
-    
-      let snakeX = snake[0].x;
-      let snakeY = snake[0].y;
-    
-      if(snakeX == food.x && snakeY == food.y) {
-        score++;
-        food = {
-          x: Math.floor((Math.random() * 17 + 1)) * box,
-          y: Math.floor((Math.random() * 15 + 3)) * box,
-        };
-      } else
-        snake.pop();
-    
-      if(snakeX < box || snakeX > box * 17
-        || snakeY < 3 * box || snakeY > box * 17)
-        clearInterval(game);
-    
-      if(dir == "left") snakeX -= box;
-      if(dir == "right") snakeX += box;
-      if(dir == "up") snakeY -= box;
-      if(dir == "down") snakeY += box;
-    
-      let newHead = {
-        x: snakeX,
-        y: snakeY
-      };
-    
-      eatTail(newHead, snake);
-    
-      snake.unshift(newHead);
+
+      if(snakeBody[0].getAttribute('posX')==evil.getAttribute('posX') &&
+      snakeBody[0].getAttribute('posY')==evil.getAttribute('posY') ){
+        evil.classList.remove('evil')
+        let a = snakeBody[snakeBody.length-1].getAttribute('posX')
+        let b = snakeBody[snakeBody.length-1].getAttribute('posY')
+        snakeBody.push(document.querySelector('[posX = "'+ a + '"][posY = "'+ b + '"]'));
+        creatEvil()
+      }
+
+      if(snakeBody[0].classList.contains('snakeBody')){
+        setTimeout(()=> {
+          alert('game over')
+        }, 200)
+        
+        clearInterval(interval)
+        // snakeBody[0].style.background = 'url('') center no-repeat'
+        // snakeBody[0].style.backgroundSize = 'cover'
+      }
+
+      snakeBody[0].classList.add('snakeHead');
+      for (let i = 0; i <snakeBody.length; i++){
+        snakeBody[i].classList.add('snakeBody')
+      }
+      steps = true;
     }
-    
-    let game = setInterval(drawGame, 300);
+    let interval = setInterval(move, 300);
 
-
-
-
-
-
+    window.addEventListener('keydown', function (e) {
+      if(steps == true){
+         if(e.keyCode == 37 && direction !== 'right'){
+        direction = 'left';
+        steps = false;
+      }
+      if(e.keyCode == 38 && direction !== 'down'){
+        direction = 'up';
+        steps = false;
+      }
+      if(e.keyCode == 39 && direction !== 'left'){
+        direction = 'right';
+        steps = false;
+      }
+      if(e.keyCode == 40 && direction !== 'up'){
+        direction = 'down';
+        steps = false;
+      }
+      }
+     
+    })
+  
   })
 
 
