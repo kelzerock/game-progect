@@ -164,7 +164,9 @@
     this.play();
     }, false);
 
-  document.querySelector('.start button').addEventListener('click', function(){
+  document.querySelector('.start button').addEventListener('click', 
+  
+    function playGame(){
       
     let audio = new Audio()
     audio.src = 'sound/button-sound.mp3'
@@ -187,23 +189,42 @@
     setTimeout(() => {
       startDiv.style.display = 'none'
     }, 2000);
-
+    let max;
+    if(innerHeight> innerWidth){
+      max =innerWidth - innerWidth*0.2;
+    } else {
+      max = innerHeight -innerHeight*0.2;
+    }
     setTimeout(() => {
     let field = document.createElement('div');
     document.body.appendChild(field);
     field.classList.add('field')
-    let max;
-    if(innerHeight> innerWidth){
-      max =innerWidth
-    } else {
-      max = innerHeight
-    }
-    field.cssText = `position: absolute; top: 0; left: 0; width: 500px; height: 500px; margin: 0 auto; display: flex; flex-wrap: wrap; z-index: 4`
+    field.style.cssText = `
+    position: absolute; 
+    top: calc( 50% - ${max}px/2); 
+    left: calc( 50% - ${max}px/2 );
+    box-sizing: border-box;
+    width: ${max}px; 
+    height: ${max}px; 
+    justify-content: space-between;
+    margin: 0 auto;
+    display: flex; 
+    flex-wrap: wrap; 
+    z-index: 4`
 
     for(let i = 1;i<=100; i++){
       let excel = document.createElement('div');
       field.appendChild(excel)
       excel.classList.add('excel')
+      excel.style.cssText = `  
+      box-sizing: border-box;
+      background-color: rgba(173, 98, 98, 0.90);
+      width: ${Math.floor(max/10 - max/100)}px;
+      height: ${Math.floor(max/10 - max/100)}px;
+      margin:  ${Math.floor(max/200)}px;
+      padding: 5px;
+      border: solid rgba(24, 4, 4, 0) 1px;
+      z-index: 5;`
     }
     let excel = document.querySelectorAll('.excel')
     let x = 1,
@@ -255,10 +276,10 @@
     let steps = false;
     let input = document.createElement('input');
     document.body.appendChild(input)
-    // input.style.cssText = '
-    // z-index
-    // '
+    input.style.cssText = "z-index: 4; margin: Auto; font-size: 20; position: absolute; left: 0; right: 0"
 
+    let score = 0;
+    input.value = `Your score: ${score}`
     function move() {
       let snakeCoordinate = [snakeBody[0].getAttribute('posX'), snakeBody[0].getAttribute('posY')];
       snakeBody[0].classList.remove('snakeHead');
@@ -302,23 +323,40 @@
       // if(snakeBody[0].getAttribute('posX') == evil.getAttribute('posX') &&
       // snakeBody[0].getAttribute('posY') == evil.getAttribute('posY') ){
        if(snakeBody[0].classList.contains('evil')){
-         
-  
-        evil.classList.remove('evil')
-        let a = snakeBody[snakeBody.length-1].getAttribute('posX')
-        let b = snakeBody[snakeBody.length-1].getAttribute('posY')
+         snakeBody[0].classList.add('doomKill');
+         setTimeout(()=>{
+           for(let i=0; i<snakeBody.length; i++){
+             snakeBody[i].classList.remove('doomKill')
+           }
+         }, 299)
+        evil.classList.remove('evil');
+        let a = snakeBody[snakeBody.length-1].getAttribute('posX');
+        let b = snakeBody[snakeBody.length-1].getAttribute('posY');
         snakeBody.push(document.querySelector('[posX = "'+ a + '"][posY = "'+ b + '"]'));
-        creatEvil()
+        creatEvil();
+        score++;
+        input.value = `Your score: ${score}`
       } 
+
       
+          
       if(snakeBody[0].classList.contains('snakeBody')){
         setTimeout(()=> {
-          alert('game over')
+          document.querySelector('.parent').style.zIndex = '7';
+          document.querySelector('video').classList.add('video-start');
+          document.querySelector('video').play();
         }, 200)
         
         clearInterval(interval)
-        // snakeBody[0].style.background = 'url('') center no-repeat'
-        // snakeBody[0].style.backgroundSize = 'cover'
+        snakeBody[0].style.background = 'url("images/doom-died.png") center no-repeat'
+        snakeBody[0].style.backgroundSize = 'cover'
+        setTimeout(()=>{
+          setTimeout(()=>{document.querySelector('.parent').style.zIndex = '1';},2000)
+          document.querySelector('video').classList.remove('video-start');
+          document.querySelector('.second-menu').style.display = 'inherit'
+        },11200)
+
+ 
       }
 
       snakeBody[0].classList.add('snakeHead');
@@ -350,6 +388,14 @@
       }
     })
    }, 2000)
+
+
+ 
   })
+
+ document.querySelector('.button-new-game').addEventListener('click', function(){
+    document.querySelector('.second-menu').style.display = "none";
+    playGame();    
+  }, false)
 
 
