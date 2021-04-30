@@ -188,10 +188,17 @@
       startDiv.style.display = 'none'
     }, 2000);
 
- 
+    setTimeout(() => {
     let field = document.createElement('div');
     document.body.appendChild(field);
     field.classList.add('field')
+    let max;
+    if(innerHeight> innerWidth){
+      max =innerWidth
+    } else {
+      max = innerHeight
+    }
+    field.cssText = `position: absolute; top: 0; left: 0; width: 500px; height: 500px; margin: 0 auto; display: flex; flex-wrap: wrap; z-index: 4`
 
     for(let i = 1;i<=100; i++){
       let excel = document.createElement('div');
@@ -228,25 +235,29 @@
     let evil 
 
     function creatEvil(){
-
       function startEvil(){
-        let posX = Math.round(Math.random()*(10-1)+1)
-        let posY = Math.round(Math.random()*(10-1)+1)
+        let posX = Math.floor(Math.random()*(10-1)+1)
+        let posY = Math.floor(Math.random()*(10-1)+1)
         return [posX, posY]
       }
 
       let evilCoordinate = startEvil();
       evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
-      evil.classList.add('evil');
-      while(evil.classList.contains('snakeBody')){
+        while(evil.classList.contains('snakeBody') || evil.classList.contains('snakeHead')){
         let evilCoordinate = startEvil();
         evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
-        evil.classList.add('evil');
       }
+      evil.classList.add('evil');
+      // console.log(evil)
     }
     creatEvil()
     let direction = "right";
     let steps = false;
+    let input = document.createElement('input');
+    document.body.appendChild(input)
+    // input.style.cssText = '
+    // z-index
+    // '
 
     function move() {
       let snakeCoordinate = [snakeBody[0].getAttribute('posX'), snakeBody[0].getAttribute('posY')];
@@ -256,39 +267,50 @@
 
       if(direction == 'right'){
         if(snakeCoordinate[0]< 10) {
-        snakeBody.unshift(document.querySelector('[posX = "' + (+snakeCoordinate[0]+1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
+        snakeBody.unshift(document.querySelector('[posX = "' + 
+        (+snakeCoordinate[0]+1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
           } else {
-        snakeBody.unshift(document.querySelector('[posX = "1"][posY ="'+ snakeCoordinate[1]+'"]'));
+        snakeBody.unshift(document.querySelector('[posX = "1"][posY ="'+ 
+        snakeCoordinate[1]+'"]'));
         }
       } else if (direction == 'left'){
         if(snakeCoordinate[0]> 1) {
-          snakeBody.unshift(document.querySelector('[posX = "' + (+snakeCoordinate[0]-1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
+          snakeBody.unshift(document.querySelector('[posX = "' + 
+          (+snakeCoordinate[0]-1) + '"][posY ="'+ snakeCoordinate[1]+'"]'));
         }else {
-          snakeBody.unshift(document.querySelector('[posX = "10"][posY ="'+ snakeCoordinate[1]+'"]'));
+          snakeBody.unshift(document.querySelector('[posX = "10"][posY ="'+ 
+          snakeCoordinate[1]+'"]'));
         }
       } else if (direction == 'up'){
         if(snakeCoordinate[1]< 10) {
-          snakeBody.unshift(document.querySelector('[posX = "' +snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] +1)+'"]'));
+          snakeBody.unshift(document.querySelector('[posX = "' +
+          snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] +1)+'"]'));
         }else {
-          snakeBody.unshift(document.querySelector('[posX = "'+ snakeCoordinate[0]+'"][posY ="1"]'));
+          snakeBody.unshift(document.querySelector('[posX = "'+ 
+          snakeCoordinate[0]+'"][posY ="1"]'));
         }
       }else if (direction == 'down'){
         if(snakeCoordinate[1]> 1) {
-          snakeBody.unshift(document.querySelector('[posX = "' + snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] -1)+'"]'));
+          snakeBody.unshift(document.querySelector('[posX = "' + 
+          snakeCoordinate[0] + '"][posY ="'+ (+ snakeCoordinate[1] -1)+'"]'));
         }else {
-          snakeBody.unshift(document.querySelector('[posX = "'+ snakeCoordinate[0]+'"][posY ="10"]'));
+          snakeBody.unshift(document.querySelector('[posX = "'+ 
+          snakeCoordinate[0]+'"][posY ="10"]'));
         }
       }
 
-      if(snakeBody[0].getAttribute('posX')==evil.getAttribute('posX') &&
-      snakeBody[0].getAttribute('posY')==evil.getAttribute('posY') ){
+      // if(snakeBody[0].getAttribute('posX') == evil.getAttribute('posX') &&
+      // snakeBody[0].getAttribute('posY') == evil.getAttribute('posY') ){
+       if(snakeBody[0].classList.contains('evil')){
+         
+  
         evil.classList.remove('evil')
         let a = snakeBody[snakeBody.length-1].getAttribute('posX')
         let b = snakeBody[snakeBody.length-1].getAttribute('posY')
         snakeBody.push(document.querySelector('[posX = "'+ a + '"][posY = "'+ b + '"]'));
         creatEvil()
-      }
-
+      } 
+      
       if(snakeBody[0].classList.contains('snakeBody')){
         setTimeout(()=> {
           alert('game over')
@@ -326,9 +348,8 @@
         steps = false;
       }
       }
-     
     })
-  
+   }, 2000)
   })
 
 

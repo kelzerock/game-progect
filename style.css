@@ -92,11 +92,7 @@ body {
   left: 0;
   top: 0;
 }
-#game {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
+
 .field {
 
   position: absolute;
@@ -112,7 +108,7 @@ body {
 }
 .excel {
   box-sizing: border-box;
-  background-color: rgb(173, 98, 98);
+  background-color: rgba(173, 98, 98, 0.90);
   width: 48px;
   height: 48px;
   margin: 1px;
@@ -132,7 +128,7 @@ body {
   z-index: 6;
 }
 .evil {
-  background: url('images/enemy.png');
+  background: url('images/enemy1.png');
   background-size: cover; 
   z-index: 6;
 }
