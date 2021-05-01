@@ -1,3 +1,4 @@
+// rings
 (() => {
   cnv1()
   cnv2()
@@ -14,7 +15,7 @@
     cnv.height = innerHeight;
   }
   init();
-  document.querySelector('.start h1').style.margin = `${innerHeight/2.5}px auto 5px auto`
+  document.querySelector('.btn-start').style.marginTop = `${innerHeight/2.5}px`
 
   const numberOfRings     = 3;
   const ringRadiusOffset  = 7;
@@ -151,35 +152,35 @@
     window.addEventListener(`resize`, init);
   }
   })();
-  
+
+// sound on button
+document.querySelector('body').addEventListener('click', function (e){
+  if(e.target.classList.contains('btn')){
+      let audio = new Audio()
+  audio.src = 'sound/button-sound.mp3'
+  audio.play();
+  }
+}, false)
 
 
-  document.addEventListener('mousemove', function(){
-    document.getElementById("my_audio").play();
-  })
 
 
-  document.getElementById("my_audio").addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-    }, false);
-
-  document.querySelector('.start button').addEventListener('click', 
-  
-    function playGame(){
-      
-    let audio = new Audio()
-    audio.src = 'sound/button-sound.mp3'
-    audio.play();
-
-    document.querySelector('.start h1').style.cssText = 'opacity: 0'
-    document.querySelector('.start button').style.cssText = 'opacity: 0'
-    
+  function playGame(){
+    let arrBtn = document.querySelectorAll('.btn');
+    for(let i = 0; i<arrBtn.length;i++){
+      arrBtn[i].style.cssText = 'opacity: 0; display: none';
+    }
+    // document.querySelector('.btn-start').style.cssText = 'opacity: 0'
+    // document.querySelector('.highscore').style.cssText = 'opacity: 0'
+    // setTimeout(() => {
+    //   document.querySelector('.btn-start').style.cssText = 'display: none'
+    // document.querySelector('.highscore').style.cssText = 'display: none'
+    // }, 10);
     let startDiv = document.querySelector('.start')
     startDiv.classList.remove('start'); 
     startDiv.classList.add('start-end');
     let heightDiv = innerHeight/2 ;
-    document.querySelector('.start-end').style.marginTop = `${heightDiv}px`
+    startDiv.style.marginTop = `${heightDiv}px`
     setTimeout(() => {
       let div = document.querySelector('.start-end');
       div.style.width = "0"
@@ -189,13 +190,14 @@
     setTimeout(() => {
       startDiv.style.display = 'none'
     }, 2000);
+    
+    setTimeout(() => {
     let max;
     if(innerHeight> innerWidth){
       max =innerWidth - innerWidth*0.2;
     } else {
       max = innerHeight -innerHeight*0.2;
-    }
-    setTimeout(() => {
+    }  
     let field = document.createElement('div');
     document.body.appendChild(field);
     field.classList.add('field')
@@ -210,7 +212,7 @@
     margin: 0 auto;
     display: flex; 
     flex-wrap: wrap; 
-    z-index: 4`
+    z-index: 3`
 
     for(let i = 1;i<=100; i++){
       let excel = document.createElement('div');
@@ -224,7 +226,7 @@
       margin:  ${Math.floor(max/200)}px;
       padding: 5px;
       border: solid rgba(24, 4, 4, 0) 1px;
-      z-index: 5;`
+      z-index: 3;`
     }
     let excel = document.querySelectorAll('.excel')
     let x = 1,
@@ -353,7 +355,16 @@
         setTimeout(()=>{
           setTimeout(()=>{document.querySelector('.parent').style.zIndex = '1';},2000)
           document.querySelector('video').classList.remove('video-start');
-          document.querySelector('.second-menu').style.display = 'inherit'
+          startDiv.classList.remove('start-end')
+          startDiv.style.cssText = '';
+          startDiv.classList.add('start')
+          arrBtn = document.querySelectorAll('.btn');
+          for(let i = 0; i<arrBtn.length;i++){
+            arrBtn[i].classList.remove('btn');
+            arrBtn[i].style.cssText = '';
+            arrBtn[i].classList.add('btn')
+          }
+          field.remove()
         },11200)
 
  
@@ -389,13 +400,18 @@
     })
    }, 2000)
 
+  }
 
- 
+
+  document.addEventListener('mousemove', function(){
+    document.getElementById("my_audio").play();
   })
+  document.getElementById("my_audio").addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+    }, false);
 
- document.querySelector('.button-new-game').addEventListener('click', function(){
-    document.querySelector('.second-menu').style.display = "none";
-    playGame();    
-  }, false)
+  document.querySelector('.start button').addEventListener('click', playGame
+  )
 
 
