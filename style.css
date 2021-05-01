@@ -48,6 +48,30 @@ body {
   -webkit-animation: pulsate 1.2s linear infinite;
   animation: pulsate 1.2s linear infinite;
 }
+.btn-start {
+  margin-bottom: 5%;
+}
+@media only screen and (max-width: 900px)  {
+  
+  .btn {
+    font-size: 1rem;
+  }
+  
+}
+@media only screen and (max-width: 600px)  {
+  
+  .btn {
+    font-size: 0.5rem;
+  }
+  
+}
+@media only screen and (max-width: 300px)  {
+  
+  .btn {
+    font-size: 0.3rem;
+  }
+  
+}
 .btn:hover {
   -webkit-animation-play-state: paused;
   animation-play-state: paused;
@@ -73,6 +97,18 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+}
+.input-score {
+  z-index: 4;
+  margin: Auto;
+  font-size: 20;
+  position: absolute;
+  padding: 10px;
+  left: 0;
+  right: 0;
+  border-radius: 15px;
+  border: none;
+  margin-top: 10px;
 }
 
 /* .field {
@@ -120,7 +156,7 @@ body {
   z-index: 6;
 }
 .parent{
-  height: 0;
+  height: 100%;
   width: 100%;
   margin: auto;
   z-index: 1;
@@ -128,7 +164,7 @@ body {
   top: 0;
   left: 0;
   padding-top: 25px;
-  padding-bottom: 56.25%;
+  /* padding-bottom: 56.25%; */
   display: block;
   overflow: hidden;
 }

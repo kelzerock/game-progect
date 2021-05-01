@@ -1,3 +1,4 @@
+'use strict';
 // rings
 (() => {
   cnv1()
@@ -170,12 +171,6 @@ document.querySelector('body').addEventListener('click', function (e){
     for(let i = 0; i<arrBtn.length;i++){
       arrBtn[i].style.cssText = 'opacity: 0; display: none';
     }
-    // document.querySelector('.btn-start').style.cssText = 'opacity: 0'
-    // document.querySelector('.highscore').style.cssText = 'opacity: 0'
-    // setTimeout(() => {
-    //   document.querySelector('.btn-start').style.cssText = 'display: none'
-    // document.querySelector('.highscore').style.cssText = 'display: none'
-    // }, 10);
     let startDiv = document.querySelector('.start')
     startDiv.classList.remove('start'); 
     startDiv.classList.add('start-end');
@@ -266,7 +261,8 @@ document.querySelector('body').addEventListener('click', function (e){
 
       let evilCoordinate = startEvil();
       evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
-        while(evil.classList.contains('snakeBody') || evil.classList.contains('snakeHead')){
+        while(evil.classList.contains('snakeBody') || evil.classList.contains('snakeHead')
+        || evil.classList.contains('evil')){
         let evilCoordinate = startEvil();
         evil = document.querySelector('[posX = "' + evilCoordinate[0] + '"][posY ="'+ evilCoordinate[1]+'"]')
       }
@@ -278,7 +274,9 @@ document.querySelector('body').addEventListener('click', function (e){
     let steps = false;
     let input = document.createElement('input');
     document.body.appendChild(input)
-    input.style.cssText = "z-index: 4; margin: Auto; font-size: 20; position: absolute; left: 0; right: 0"
+    input.classList.add('input-score');
+    input.setAttribute('readonly', true)
+
 
     let score = 0;
     input.value = `Your score: ${score}`
@@ -322,8 +320,7 @@ document.querySelector('body').addEventListener('click', function (e){
         }
       }
 
-      // if(snakeBody[0].getAttribute('posX') == evil.getAttribute('posX') &&
-      // snakeBody[0].getAttribute('posY') == evil.getAttribute('posY') ){
+
        if(snakeBody[0].classList.contains('evil')){
          snakeBody[0].classList.add('doomKill');
          setTimeout(()=>{
@@ -331,6 +328,14 @@ document.querySelector('body').addEventListener('click', function (e){
              snakeBody[i].classList.remove('doomKill')
            }
          }, 299)
+        let audioShot = new Audio()
+        audioShot.src = 'sound/gun-shot.mp3'
+        audioShot.play();
+        setTimeout(()=>{
+          let audioReload = new Audio()
+          audioReload.src = 'sound/gun-reload.mp3'
+          audioReload.play();
+        },500)
         evil.classList.remove('evil');
         let a = snakeBody[snakeBody.length-1].getAttribute('posX');
         let b = snakeBody[snakeBody.length-1].getAttribute('posY');
@@ -344,8 +349,15 @@ document.querySelector('body').addEventListener('click', function (e){
           
       if(snakeBody[0].classList.contains('snakeBody')){
         setTimeout(()=> {
+          let audioDied = new Audio()
+          audioDied.src = 'sound/died.mp3'
+          audioDied.play();
           document.querySelector('.parent').style.zIndex = '7';
           document.querySelector('video').classList.add('video-start');
+          let videoHeight = document.querySelector('video').style.height;
+          // document.querySelector('video').style.top = `calc( 50% - (${parseInt(videoHeight)}/ 2 +'px') )`;
+          console.log(document.querySelector('video').style.top)
+          // document.querySelector('.btn-start').style.marginTop = `${innerHeight/2.5}px`
           document.querySelector('video').play();
         }, 200)
         
@@ -358,12 +370,14 @@ document.querySelector('body').addEventListener('click', function (e){
           startDiv.classList.remove('start-end')
           startDiv.style.cssText = '';
           startDiv.classList.add('start')
+
           arrBtn = document.querySelectorAll('.btn');
           for(let i = 0; i<arrBtn.length;i++){
             arrBtn[i].classList.remove('btn');
             arrBtn[i].style.cssText = '';
             arrBtn[i].classList.add('btn')
           }
+          document.querySelector('.btn-start').style.marginTop = `${innerHeight/2.5}px`
           field.remove()
         },11200)
 
